@@ -1,14 +1,28 @@
-import React from 'react';
+import React, { useState }  from 'react';
 import {StyleSheet, View, Dimensions} from 'react-native';
+import {
+  Colors,
+  Icon,
+  Incubator,
+  Text,
+  Picker,
+  Avatar,
+  Assets,
+  PanningProvider,
+  Typography,
+  PickerProps,
+  PickerMethods,
+  Button
+} from 'react-native-ui-lib';
 
 import MapView from 'react-native-maps';
 
 const {width, height} = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
-const LATITUDE = 37.78825;
-const LONGITUDE = -122.4324;
-const LATITUDE_DELTA = 0.0922;
+const LATITUDE = 52.23;
+const LONGITUDE = 20.86;
+const LATITUDE_DELTA = 2;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const customStyle = [
@@ -173,6 +187,21 @@ const customStyle = [
   },
 ];
 
+const options = [
+  {label: 'JavaScript', value: 'js'},
+  {label: 'Java', value: 'java'},
+  {label: 'Python', value: 'python'},
+  {label: 'C++', value: 'c++', disabled: true},
+  {label: 'ananas', value: '1'},
+  {label: 'babana', value: '2'},
+  {label: 'kukumba', value: '3'},
+  {label: 'zagoi', value: '4'},
+  {label: 'polit', value: '5'},
+  {label: 'zimbo', value: '6'},
+  {label: 'sacrip', value: '7'},
+
+];
+
 class MapStyle extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
@@ -194,6 +223,24 @@ class MapStyle extends React.Component<any, any> {
           }}
           customMapStyle={customStyle}
         />
+      <Picker
+                  placeholder="Favorite Language"
+                  floatingPlaceholder
+                  enableModalBlur={false}
+                  topBarProps={{title: 'Languages'}}
+                  // style={{color: Colors.red20}}
+                  showSearch
+                  searchPlaceholder={'Search a language'}
+                  searchStyle={{color: Colors.blue30, placeholderTextColor: Colors.grey50}}
+                  // onSearchChange={value => console.warn('value', value)}
+                  migrateTextField
+                >
+                  {options.map((option)=>(
+                    <Picker.Item key={option.value} value={option} label={''} disabled={option.disabled}/>
+                  ))}
+                </Picker>
+        <Button style={styles.button} label={'Press'} size={Button.sizes.medium} backgroundColor={Colors.red30}/>
+        <Button label={'Press2'} size={Button.sizes.medium} backgroundColor={Colors.green30}/>
       </View>
     );
   }
@@ -202,12 +249,15 @@ class MapStyle extends React.Component<any, any> {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   map: {
     ...StyleSheet.absoluteFillObject,
   },
+  button: {
+    marginBottom: 50,
+  }
 });
 
 export default MapStyle;
