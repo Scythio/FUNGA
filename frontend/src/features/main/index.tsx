@@ -20,6 +20,7 @@ import MapView from 'react-native-maps';
 import {options} from './constants/options';
 import {styles} from './styles/main';
 import {customStyle} from './styles/map';
+import {Stack} from '../../../App';
 
 const {width, height} = Dimensions.get('window');
 
@@ -29,8 +30,10 @@ const LONGITUDE = 20.86;
 const LATITUDE_DELTA = 2;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-interface MainScreenProps {}
-const MainScreen: FC<MainScreenProps> = () => {
+interface MainScreenProps {
+  navigation: any;
+}
+const MainScreen: FC<MainScreenProps> = ({navigation}) => {
   return (
     <View style={styles.container}>
       <MapView
@@ -43,39 +46,9 @@ const MainScreen: FC<MainScreenProps> = () => {
         }}
         customMapStyle={customStyle}
       />
-      <Picker
-        placeholder="Favorite Language"
-        floatingPlaceholder
-        enableModalBlur={false}
-        topBarProps={{title: 'Languages'}}
-        // style={{color: Colors.red20}}
-        showSearch
-        searchPlaceholder={'Search a language'}
-        searchStyle={{
-          color: Colors.blue30,
-          placeholderTextColor: Colors.grey50,
-        }}
-        // onSearchChange={value => console.warn('value', value)}
-        migrateTextField>
-        {options.map(option => (
-          <Picker.Item
-            key={option.value}
-            value={option}
-            label={''}
-            disabled={option.disabled}
-          />
-        ))}
-      </Picker>
       <Button
-        style={styles.button}
-        label={'Press'}
-        size={Button.sizes.medium}
-        backgroundColor={Colors.red30}
-      />
-      <Button
-        label={'Press2'}
-        size={Button.sizes.medium}
-        backgroundColor={Colors.green30}
+        title="Go to Details... again"
+        onPress={() => navigation.navigate('Add mushroom')}
       />
     </View>
   );
