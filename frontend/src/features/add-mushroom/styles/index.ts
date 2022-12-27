@@ -13,5 +13,12 @@ export const styles = StyleSheet.create({
   },
   button: {
     marginBottom: 50,
+  },
+  subHeader: {
+    textAlign: 'center',
+    padding: 5,
+    color: 'gray70',
+    fontWeight: '300',
+    fontSize: 24,
   }
 });
