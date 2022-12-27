@@ -1,21 +1,8 @@
 import React, {FC, useState} from 'react';
 import {StyleSheet, View, Dimensions} from 'react-native';
-import {
-  Colors,
-  Icon,
-  Incubator,
-  Text,
-  Picker,
-  Avatar,
-  Assets,
-  PanningProvider,
-  Typography,
-  PickerProps,
-  PickerMethods,
-  Button,
-} from 'react-native-ui-lib';
+import {Button} from '@rneui/themed';
 
-import MapView from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 
 import {options} from './constants/options';
 import {styles} from './styles/main';
@@ -44,8 +31,16 @@ const MainScreen: FC<MainScreenProps> = ({navigation}) => {
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA,
         }}
-        customMapStyle={customStyle}
-      />
+        customMapStyle={customStyle}>
+        <Marker
+          coordinate={{
+            latitude: LATITUDE,
+            longitude: LONGITUDE,
+          }}
+          title={'grzyb'}
+          description={'To jest grzyb'}
+        />
+      </MapView>
       <Button
         title="Go to Details... again"
         onPress={() => navigation.navigate('Add mushroom')}
