@@ -30,7 +30,13 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Root">
-        <Stack.Screen name="Root" component={Root} />
+        <Stack.Screen
+          name="Root"
+          component={Root}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Stack.Screen name="Add mushroom" component={AddMushroomScreen} />
       </Stack.Navigator>
     </NavigationContainer>
