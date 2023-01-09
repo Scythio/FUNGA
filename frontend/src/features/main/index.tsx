@@ -1,13 +1,12 @@
 import React, {FC, useState} from 'react';
 import {StyleSheet, View, Dimensions} from 'react-native';
-import {Button} from '@rneui/themed';
 
 import MapView, {Marker} from 'react-native-maps';
 
-import {options} from './constants/options';
 import {styles} from './styles/main';
 import {customStyle} from './styles/map';
-import {Stack} from '../../../App';
+import {FAB} from '@rneui/themed';
+import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown';
 
 const {width, height} = Dimensions.get('window');
 
@@ -16,6 +15,15 @@ const LATITUDE = 52.23;
 const LONGITUDE = 20.86;
 const LATITUDE_DELTA = 2;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+const example_dataset = [
+  {
+    id: '1',
+    title: 'hello',
+  },
+  {id: '2', title: 'aaaaa'},
+  {id: '3', title: 'aaccc'},
+];
 
 interface MainScreenProps {
   navigation: any;
@@ -41,10 +49,30 @@ const MainScreen: FC<MainScreenProps> = ({navigation}) => {
           description={'To jest grzyb'}
         />
       </MapView>
-      <Button
-        title="Go to Details... again"
-        onPress={() => navigation.navigate('Add mushroom')}
-      />
+      <View
+        style={{
+          marginTop: 20,
+          width: '80%',
+        }}>
+        <AutocompleteDropdown
+          clearOnFocus={false}
+          closeOnBlur={true}
+          closeOnSubmit={false}
+          // initialValue={selectedItem ? `${selectedItem.id}` : undefined}
+          onSelectItem={item => {}}
+          dataSet={example_dataset}
+        />
+      </View>
+      <View style={styles.button}>
+        <FAB
+          visible={true}
+          icon={{name: 'add', color: 'white'}}
+          color="green"
+          upperCase
+          title="Dodaj grzyba"
+          onPress={() => navigation.navigate('Add mushroom')}
+        />
+      </View>
     </View>
   );
 };

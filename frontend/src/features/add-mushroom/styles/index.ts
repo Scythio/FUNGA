@@ -1,11 +1,9 @@
-import {
-  StyleSheet,
-} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   map: {
@@ -20,5 +18,5 @@ export const styles = StyleSheet.create({
     color: 'gray70',
     fontWeight: '300',
     fontSize: 24,
-  }
+  },
 });
