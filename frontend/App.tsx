@@ -9,6 +9,8 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import MainScreen from './src/features/main';
 import UserScreen from './src/features/user';
 import AddMushroomScreen from './src/features/add-mushroom';
+import theme from './src/shared/styles/theme';
+import {ThemeProvider} from '@rneui/themed';
 
 const Drawer = createDrawerNavigator();
 export const Stack = createNativeStackNavigator();
@@ -28,18 +30,20 @@ const App = () => {
   };
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Root">
-        <Stack.Screen
-          name="Root"
-          component={Root}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen name="Add mushroom" component={AddMushroomScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ThemeProvider theme={theme}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Root">
+          <Stack.Screen
+            name="Root"
+            component={Root}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen name="Add mushroom" component={AddMushroomScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ThemeProvider>
   );
 };
 
