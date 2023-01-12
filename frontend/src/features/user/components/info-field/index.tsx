@@ -1,6 +1,6 @@
 import React, {FC, useState} from 'react';
 import {View} from 'react-native';
-import {Text, Input} from '@rneui/themed';
+import {Text, TextInput} from 'react-native-paper';
 
 interface InfoFieldProps {
   title: string;
@@ -18,11 +18,10 @@ const InfoField: FC<InfoFieldProps> = ({title, value}) => {
       <Text
         style={{
           marginLeft: 10,
-        }}
-        h4>
+        }}>
         {title}
       </Text>
-      <Input value={value} disabled />
+      <TextInput value={value} disabled />
     </View>
   );
 };

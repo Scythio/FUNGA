@@ -1,63 +1,25 @@
-import React, {type PropsWithChildren} from 'react';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import React from 'react';
+import {StyleSheet} from 'react-native';
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-
-import MainScreen from './src/features/main';
-import UserScreen from './src/features/user';
-import AddMushroomScreen from './src/features/add-mushroom';
 import theme from './src/shared/styles/theme';
-import {ThemeProvider} from '@rneui/themed';
-
-const Drawer = createDrawerNavigator();
-export const Stack = createNativeStackNavigator();
-
-function Root() {
-  return (
-    <Drawer.Navigator initialRouteName="Main">
-      <Drawer.Screen name="Main" component={MainScreen} />
-      <Drawer.Screen name="User info" component={UserScreen} />
-    </Drawer.Navigator>
-  );
-}
+import {Provider} from 'react-redux';
+import {Provider as PaperProvider} from 'react-native-paper';
+import store from './src/store';
+import MainNavigator from './src/navigator';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const App = () => {
-  const backgroundStyle = {
-    backgroundColor: Colors.darker,
-  };
-
   return (
-    <ThemeProvider theme={theme}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Root">
-          <Stack.Screen
-            name="Root"
-            component={Root}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen name="Add mushroom" component={AddMushroomScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </ThemeProvider>
+    <PaperProvider
+      theme={theme}
+      settings={{
+        icon: props => <Icon {...props} />,
+      }}>
+      <Provider store={store}>
+        <MainNavigator />
+      </Provider>
+    </PaperProvider>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  button: {
-    marginBottom: 50,
-  },
-});
 export default App;

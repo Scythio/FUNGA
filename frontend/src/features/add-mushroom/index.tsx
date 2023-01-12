@@ -1,10 +1,15 @@
 import React, {FC, useState} from 'react';
-import {StyleSheet, View, Dimensions} from 'react-native';
+import {StyleSheet, View, Dimensions, Image} from 'react-native';
 import {styles} from './styles';
-import {Button, Text, Slider, Image} from '@rneui/themed';
 import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown';
 import useCamera from '../../shared/hooks/camera';
 import {MushroomSpecies} from '../../shared/models/mushroom-species.model';
+import LikeDislike, {
+  LikeDislikeProps,
+} from '../../shared/components/like-dislike';
+import {LikeDislikeState} from '../../shared/constants/like-dislike-state.enum';
+import {Button, Text} from 'react-native-paper';
+import Slider from '@react-native-community/slider';
 
 let dataSet: Array<MushroomSpecies> = [
   {id: 1, name: 'Borowik'},
@@ -59,14 +64,15 @@ const AddMushroomScreen: FC<AddMushroomScreenProps> = () => {
             maximumValue={100}
             minimumValue={0}
             step={10}
-            thumbStyle={{height: 20, width: 20, backgroundColor: 'transparent'}}
           />
         </View>
         <View style={{padding: 10, marginTop: 20}}>
           <Text style={styles.subHeader}>Załącz zdjęcie</Text>
           {!photo?.uri ? (
             <View>
-              <Button title="Dodaj" onPress={() => startCamera()} />
+              <Button mode="contained" onPress={() => startCamera()}>
+                Dodaj
+              </Button>
             </View>
           ) : (
             <View>
@@ -78,12 +84,15 @@ const AddMushroomScreen: FC<AddMushroomScreenProps> = () => {
                   justifyContent: 'space-around',
                 }}>
                 <Button
-                  title="Usun"
+                  mode="contained"
                   onPress={() => {
                     removePhoto();
-                  }}
-                />
-                <Button title="Zmien" onPress={() => startCamera()} />
+                  }}>
+                  Usun
+                </Button>
+                <Button mode="contained" onPress={() => startCamera()}>
+                  Zmien
+                </Button>
               </View>
               <Image
                 source={{uri: photo?.uri}}
@@ -102,8 +111,12 @@ const AddMushroomScreen: FC<AddMushroomScreenProps> = () => {
           flexDirection: 'row',
           justifyContent: 'space-around',
         }}>
-        <Button title={'Dodaj'} onPress={() => {}} />
-        <Button title="Anunuj" onPress={() => {}} />
+        <Button mode="contained" onPress={() => {}}>
+          Dodaj
+        </Button>
+        <Button mode="contained" onPress={() => {}}>
+          Usun
+        </Button>
       </View>
     </View>
   );

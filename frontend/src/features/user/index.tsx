@@ -1,9 +1,8 @@
-import {Avatar} from '@rneui/themed';
 import React, {FC, useState} from 'react';
 import {StyleSheet, View, Dimensions} from 'react-native';
 import {styles} from './styles';
-import {Text, Button} from '@rneui/themed';
 import InfoField from './components/info-field';
+import {Avatar, Button, Text} from 'react-native-paper';
 
 interface UserScreenProps {}
 const UserScreen: FC<UserScreenProps> = () => {
@@ -21,15 +20,14 @@ const UserScreen: FC<UserScreenProps> = () => {
           style={{
             paddingHorizontal: 10,
           }}>
-          <Avatar
+          <Avatar.Image
             size={64}
-            rounded
             source={{
               uri: 'https://randomuser.me/api/portraits/men/36.jpg',
             }}
           />
         </View>
-        <Text h2>NickName</Text>
+        <Text>NickName</Text>
       </View>
       <View
         style={{
@@ -44,12 +42,9 @@ const UserScreen: FC<UserScreenProps> = () => {
           padding: 20,
         }}>
         <Button
-          buttonStyle={{
+          style={{
             backgroundColor: 'rgba(111, 202, 186, 1)',
             borderRadius: 15,
-          }}
-          containerStyle={{
-            width: 100,
           }}
           onPress={() => {}}>
           Zmien
