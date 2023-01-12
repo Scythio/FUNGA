@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useState, useEffect} from 'react';
 import {StyleSheet, View, Dimensions, Image} from 'react-native';
 import {styles} from './styles';
 import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown';
@@ -10,6 +10,11 @@ import LikeDislike, {
 import {LikeDislikeState} from '../../shared/constants/like-dislike-state.enum';
 import {Button, Text} from 'react-native-paper';
 import Slider from '@react-native-community/slider';
+import {useAppDispatch, useAppSelector} from '../../store';
+import {
+  fetchBerries,
+  selectBerries,
+} from '../../store/slices/pokemon/pokemon.slice';
 
 let dataSet: Array<MushroomSpecies> = [
   {id: 1, name: 'Borowik'},
@@ -19,12 +24,18 @@ let dataSet: Array<MushroomSpecies> = [
 
 interface AddMushroomScreenProps {}
 const AddMushroomScreen: FC<AddMushroomScreenProps> = () => {
+  const dispatch = useAppDispatch();
+  const berries = useAppSelector(selectBerries);
   const [selectedItem, setSelectedItem] = useState<MushroomSpecies | null>(
     dataSet[0],
   );
   const [numberOfMushrooms, setNumberOfMushrooms] = useState<number>(0);
 
   const {startCamera, photo, removePhoto} = useCamera();
+
+  useEffect(() => {
+    console.log(berries);
+  }, [berries]);
 
   return (
     <View style={styles.container}>
@@ -111,7 +122,11 @@ const AddMushroomScreen: FC<AddMushroomScreenProps> = () => {
           flexDirection: 'row',
           justifyContent: 'space-around',
         }}>
-        <Button mode="contained" onPress={() => {}}>
+        <Button
+          mode="contained"
+          onPress={() => {
+            dispatch(fetchBerries());
+          }}>
           Dodaj
         </Button>
         <Button mode="contained" onPress={() => {}}>
