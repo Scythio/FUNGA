@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import MapView, {Callout, Heatmap, Marker} from 'react-native-maps';
+import MapView, {Callout, Heatmap, Marker, Region} from 'react-native-maps';
 
 import {styles} from './styles/main';
 import {customStyle} from './styles/map';
@@ -20,6 +20,7 @@ import {
 import {MushroomRecord} from '../../shared/models/mushroom-record.model';
 import CardMushroomDetails from './components/card-mushroom-details';
 import {FAB} from 'react-native-paper';
+import useGeolocation from '../../shared/hooks/geolocation';
 
 const {width, height} = Dimensions.get('window');
 
@@ -40,21 +41,25 @@ const MainScreen: FC<MainScreenProps> = ({navigation}) => {
   const [activeMushroom, setActiveMushroom] = useState<MushroomRecord | null>(
     null,
   );
+  const [currentRegion, setCurrentRegion] = useState<Region>({
+    latitude: LATITUDE,
+    longitude: LONGITUDE,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA,
+  });
+
+  const {currentPosition} = useGeolocation();
 
   return (
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        initialRegion={{
-          latitude: LATITUDE,
-          longitude: LONGITUDE,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }}
+        initialRegion={currentRegion}
         customMapStyle={customStyle}
         onPress={() => {
           setActiveMushroom(null);
-        }}>
+        }}
+        showsUserLocation>
         {mushroomCollection.map(mushroom => (
           <Marker
             coordinate={mushroom.coordinates}
