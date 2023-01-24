@@ -3,7 +3,7 @@ import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 import rootReducer from './root.reducer';
 import createSagaMiddleware from 'redux-saga';
 
-import rootSaga from '../sagas/pokemon';
+import rootSaga from '../sagas';
 
 const sagaMiddleware = createSagaMiddleware();
 

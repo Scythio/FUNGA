@@ -15,6 +15,8 @@ import {
   fetchBerries,
   selectBerries,
 } from '../../store/slices/pokemon/pokemon.slice';
+import { addPost } from '../../store/slices/mushroom/mushroom.slice';
+import { forceTouchGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/ForceTouchGestureHandler';
 
 let dataSet: Array<MushroomSpecies> = [
   {id: 1, name: 'Borowik'},
@@ -125,7 +127,18 @@ const AddMushroomScreen: FC<AddMushroomScreenProps> = () => {
         <Button
           mode="contained"
           onPress={() => {
-            dispatch(fetchBerries());
+            dispatch(addPost({
+              mushroomPk: 5,
+              quantity: 10,
+              latitude: 54,
+              longitude: 21,
+              userPk: 2,
+              image: {
+                name: photo?.fileName!,
+                type: photo?.type!,
+                uri: photo?.uri!,
+            }
+            }));
           }}>
           Dodaj
         </Button>

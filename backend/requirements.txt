@@ -1,5 +1,8 @@
 Django==4.1.4
 djangorestframework
+djangorestframework_simplejwt
 markdown
 django-filter
 django-cors-headers
+pyJWT
+Pillow
