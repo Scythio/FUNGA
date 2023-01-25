@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 
 import theme from './src/shared/styles/theme';

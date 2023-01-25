@@ -3,9 +3,13 @@ import {StyleSheet, View, Dimensions} from 'react-native';
 import {styles} from './styles';
 import InfoField from './components/info-field';
 import {Avatar, Button, Text} from 'react-native-paper';
+import {useAppSelector} from '../../store';
+import {selectCurrentUser} from '../../store/slices/user/user.slice';
 
 interface UserScreenProps {}
 const UserScreen: FC<UserScreenProps> = () => {
+  const user = useAppSelector(selectCurrentUser);
+
   return (
     <View style={styles.container}>
       <View
@@ -27,7 +31,7 @@ const UserScreen: FC<UserScreenProps> = () => {
             }}
           />
         </View>
-        <Text>NickName</Text>
+        <Text>{user && user.username}</Text>
       </View>
       <View
         style={{
@@ -35,7 +39,7 @@ const UserScreen: FC<UserScreenProps> = () => {
         }}>
         <InfoField title={'Name'} value={'Robert'} />
         <InfoField title={'Surname'} value={'Lewandowski'} />
-        <InfoField title={'Email'} value={'robert9Goal@gmail.com'} />
+        <InfoField title={'Email'} value={user ? user.email : ''} />
       </View>
       <View
         style={{

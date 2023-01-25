@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -7,19 +7,28 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import MapView, {Callout, Heatmap, Marker} from 'react-native-maps';
+import MapView, {Callout, Heatmap, Marker, Region} from 'react-native-maps';
 
 import {styles} from './styles/main';
 import {customStyle} from './styles/map';
 import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown';
-import {useAppSelector} from '../../store';
+import {useAppDispatch, useAppSelector} from '../../store';
 import {
+  fetchMushroomSpecies,
   selectMushroomCollection,
   selectMushroomSpecies,
+  selectMushroomSpeciesStatus,
 } from '../../store/slices/mushroom/mushroom.slice';
 import {MushroomRecord} from '../../shared/models/mushroom-record.model';
 import CardMushroomDetails from './components/card-mushroom-details';
 import {FAB} from 'react-native-paper';
+import useGeolocation from '../../shared/hooks/geolocation';
+import {FetchingStatus} from '../../shared/constants/fetching-status.enum';
+import {
+  fetchPosts,
+  selectPostList,
+  selectPostListStatus,
+} from '../../store/slices/post/post.slice';
 
 const {width, height} = Dimensions.get('window');
 
@@ -35,42 +44,61 @@ interface MainScreenProps {
 
 const MainScreen: FC<MainScreenProps> = ({navigation}) => {
   const mushroomSpecies = useAppSelector(selectMushroomSpecies);
-  const mushroomCollection = useAppSelector(selectMushroomCollection);
+  const mushroomSpeciesStatus = useAppSelector(selectMushroomSpeciesStatus);
+  const postList = useAppSelector(selectPostList);
+  const postListStatus = useAppSelector(selectPostListStatus);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    mushroomSpeciesStatus == FetchingStatus.UNSET &&
+      dispatch(fetchMushroomSpecies());
+  }, [mushroomSpeciesStatus]);
+
+  useEffect(() => {
+    postListStatus == FetchingStatus.UNSET && dispatch(fetchPosts());
+  }, [postListStatus]);
 
   const [activeMushroom, setActiveMushroom] = useState<MushroomRecord | null>(
     null,
   );
+  const [currentRegion, setCurrentRegion] = useState<Region>({
+    latitude: LATITUDE,
+    longitude: LONGITUDE,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA,
+  });
+
+  const {currentPosition} = useGeolocation();
 
   return (
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        initialRegion={{
-          latitude: LATITUDE,
-          longitude: LONGITUDE,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }}
+        initialRegion={currentRegion}
         customMapStyle={customStyle}
         onPress={() => {
           setActiveMushroom(null);
-        }}>
-        {mushroomCollection.map(mushroom => (
+        }}
+        showsUserLocation>
+        {postList.map(post => (
           <Marker
-            coordinate={mushroom.coordinates}
-            key={mushroom.id}
-            onPress={event => {
-              setActiveMushroom(mushroom);
+            coordinate={{
+              longitude: post.longitude,
+              latitude: post.latitude,
             }}
+            key={post.id}
+            onPress={event => {}}
           />
         ))}
-        <Heatmap
-          points={mushroomCollection.map(mushroom => ({
-            latitude: mushroom.coordinates.latitude,
-            longitude: mushroom.coordinates.longitude,
-            weight: mushroom.weights,
-          }))}
-        />
+        {postList.length > 0 && (
+          <Heatmap
+            points={postList.map(post => ({
+              latitude: post.latitude,
+              longitude: post.longitude,
+              weight: post.quantity,
+            }))}
+          />
+        )}
       </MapView>
       <View
         style={{
