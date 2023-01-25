@@ -1,7 +1,9 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../..';
 import {AddPostRequest} from '../../../api/contracts/post/add-post';
+import {DislikePostRequest} from '../../../api/contracts/post/dislike-post';
 import {GetPostDetailsRequest} from '../../../api/contracts/post/get-post-details';
+import {LikePostRequest} from '../../../api/contracts/post/like-post';
 import {FetchingStatus} from '../../../shared/constants/fetching-status.enum';
 import {PostDetails} from '../../../shared/models/post-details.model';
 import Post from '../../../shared/models/post.model';
@@ -48,6 +50,14 @@ export const postSlice = createSlice({
     clearPostDetails: (state: PostState) => {
       state.postDetails = null;
     },
+    likePost: (
+      state: PostState,
+      {payload}: PayloadAction<LikePostRequest>,
+    ) => {},
+    dislikePost: (
+      state: PostState,
+      {payload}: PayloadAction<DislikePostRequest>,
+    ) => {},
   },
 });
 
@@ -58,6 +68,8 @@ export const {
   fetchPostDetails,
   setCurrentPostDetails,
   clearPostDetails,
+  likePost,
+  dislikePost,
 } = postSlice.actions;
 
 const thisSlice = (state: RootState) => state.post;

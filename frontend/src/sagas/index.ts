@@ -11,8 +11,10 @@ import {
 } from '../store/slices/user/user.slice';
 import {watchMushroomSpecies} from './mushroom/fetch-mushroom-species.sagas';
 import {watchAddPost} from './post/add-post.saga';
+import {watchDislikePost} from './post/dislike-post.saga';
 import {watchFetchPostDetails} from './post/fetch-post-details.sagas';
 import {watchFetchPostList} from './post/fetch-post-list.sagas';
+import {watchLikePost} from './post/like-post.saga';
 import {watchLogin} from './user/login.sagas';
 
 export function* fetchMessageResponseSaga(): any {
@@ -84,5 +86,7 @@ export default function* rootSaga() {
     watchAddPost(),
     watchLogin(),
     watchFetchPostDetails(),
+    watchLikePost(),
+    watchDislikePost(),
   ]);
 }

@@ -3,10 +3,12 @@ import {Image, Text, View} from 'react-native';
 import LikeDislike from '../../../../shared/components/like-dislike';
 import {LikeDislikeState} from '../../../../shared/constants/like-dislike-state.enum';
 import {PostDetails} from '../../../../shared/models/post-details.model';
-import {useAppSelector} from '../../../../store';
+import {useAppDispatch, useAppSelector} from '../../../../store';
 import {selectMushroomSpecies} from '../../../../store/slices/mushroom/mushroom.slice';
 import cardStyles from './styles';
 import {ActivityIndicator, MD2Colors} from 'react-native-paper';
+import {dislikePost, likePost} from '../../../../store/slices/post/post.slice';
+import {selectCurrentUser} from '../../../../store/slices/user/user.slice';
 
 interface CardMushroomDetailsProps {
   postDetails: PostDetails | null;
@@ -14,9 +16,11 @@ interface CardMushroomDetailsProps {
 
 const CardMushroomDetails: FC<CardMushroomDetailsProps> = ({postDetails}) => {
   const mushroomSpecies = useAppSelector(selectMushroomSpecies);
+  const currentUser = useAppSelector(selectCurrentUser);
+
+  const dispatch = useAppDispatch();
 
   const [details, setDetails] = useState<PostDetails | null>(postDetails);
-  console.log(postDetails?.image);
   useEffect(() => {
     setDetails(postDetails);
   }, [postDetails]);
@@ -34,6 +38,14 @@ const CardMushroomDetails: FC<CardMushroomDetailsProps> = ({postDetails}) => {
           : details.downvotes;
         userUpvoted = true;
         userDownvoted = false;
+        currentUser &&
+          dispatch(
+            likePost({
+              action: 'add',
+              userId: currentUser.id,
+              postId: details.id,
+            }),
+          );
       } else if (state == LikeDislikeState.DISLIKE) {
         upvotes = details.userUpvoted ? details.upvotes - 1 : details.upvotes;
         downvotes = details.userDownvoted
@@ -41,6 +53,14 @@ const CardMushroomDetails: FC<CardMushroomDetailsProps> = ({postDetails}) => {
           : details.downvotes + 1;
         userUpvoted = false;
         userDownvoted = true;
+        currentUser &&
+          dispatch(
+            dislikePost({
+              action: 'add',
+              userId: currentUser.id,
+              postId: details.id,
+            }),
+          );
       } else {
         upvotes = details.userUpvoted ? details.upvotes - 1 : details.upvotes;
         downvotes = details.userDownvoted
@@ -48,6 +68,24 @@ const CardMushroomDetails: FC<CardMushroomDetailsProps> = ({postDetails}) => {
           : details.downvotes;
         userUpvoted = false;
         userDownvoted = false;
+        if (currentUser) {
+          details.userUpvoted &&
+            dispatch(
+              likePost({
+                action: 'remove',
+                userId: currentUser.id,
+                postId: details.id,
+              }),
+            );
+          details.userDownvoted &&
+            dispatch(
+              dislikePost({
+                action: 'remove',
+                userId: currentUser.id,
+                postId: details.id,
+              }),
+            );
+        }
       }
 
       const newDetails: PostDetails = {

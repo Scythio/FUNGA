@@ -11,7 +11,10 @@ import MapView, {Callout, Heatmap, Marker, Region} from 'react-native-maps';
 
 import {styles} from './styles/main';
 import {customStyle} from './styles/map';
-import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown';
+import {
+  AutocompleteDropdown,
+  TAutocompleteDropdownItem,
+} from 'react-native-autocomplete-dropdown';
 import {useAppDispatch, useAppSelector} from '../../store';
 import {
   fetchMushroomSpecies,
@@ -75,6 +78,10 @@ const MainScreen: FC<MainScreenProps> = ({navigation}) => {
     longitudeDelta: LONGITUDE_DELTA,
   });
 
+  const [filteredSpecies, setFilteredSpecies] = useState<
+    TAutocompleteDropdownItem | undefined
+  >();
+
   const {currentPosition} = useGeolocation();
 
   return (
@@ -88,47 +95,64 @@ const MainScreen: FC<MainScreenProps> = ({navigation}) => {
           dispatch(clearPostDetails());
         }}
         showsUserLocation>
-        {postList.map(post => (
-          <Marker
-            coordinate={{
-              longitude: post.longitude,
-              latitude: post.latitude,
-            }}
-            key={post.id}
-            onPress={event => {
-              if (currentUser) {
-                dispatch(
-                  fetchPostDetails({
-                    postId: post.id,
-                    userId: currentUser.id,
-                  }),
-                );
-                setIsActivePost(true);
-              }
-            }}
-          />
-        ))}
-        {postList.length > 0 && (
+        {postList
+          .filter(
+            post =>
+              !filteredSpecies || `${post.mushroomId}` == filteredSpecies.id,
+          )
+          .map(post => (
+            <Marker
+              coordinate={{
+                longitude: post.longitude,
+                latitude: post.latitude,
+              }}
+              key={post.id}
+              onPress={event => {
+                if (currentUser) {
+                  dispatch(
+                    fetchPostDetails({
+                      postId: post.id,
+                      userId: currentUser.id,
+                    }),
+                  );
+                  setIsActivePost(true);
+                }
+              }}
+            />
+          ))}
+        {postList.filter(
+          post =>
+            !filteredSpecies || `${post.mushroomId}` == filteredSpecies.id,
+        ).length > 0 && (
           <Heatmap
-            points={postList.map(post => ({
-              latitude: post.latitude,
-              longitude: post.longitude,
-              weight: post.quantity,
-            }))}
+            points={postList
+              .filter(
+                post =>
+                  !filteredSpecies ||
+                  `${post.mushroomId}` == filteredSpecies.id,
+              )
+              .map(post => ({
+                latitude: post.latitude,
+                longitude: post.longitude,
+                weight: post.quantity,
+              }))}
+            radius={100}
           />
         )}
       </MapView>
       <View
         style={{
-          marginTop: 20,
-          width: '80%',
+          marginTop: 9,
+          width: '70%',
         }}>
         <AutocompleteDropdown
           clearOnFocus={false}
           closeOnBlur={true}
           closeOnSubmit={false}
           // initialValue={selectedItem ? `${selectedItem.id}` : undefined}
-          onSelectItem={item => {}}
+          onSelectItem={item => {
+            setFilteredSpecies(item);
+          }}
           dataSet={mushroomSpecies.map(species => ({
             id: `${species.id}`,
             title: species.name,
