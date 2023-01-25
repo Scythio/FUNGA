@@ -12,6 +12,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+import os
 import base64
 import logging
 import json
@@ -85,14 +86,15 @@ def downvote(request):
 # @permission_classes([IsAuthenticated])
 def post(request):
     data = json.loads(request.body.decode("utf-8"))
-    models.Post.objects.create(
+    new_post = models.Post.objects.create(
         mushroom_id = data["mushroom_id"],
         quantity = data['quantity'],
         latitude = data['latitude'],
         longitude= data['longitude'],
         user_id = data['user_id'],
-        image = ContentFile(base64.b64decode(data['image'])),
     )
+    new_post.image = ContentFile(base64.b64decode(data['image']), name=f'post{new_post.id}_{datetime.now():%Y%m%d%H%M%S}.png')
+    new_post.save()
     return Response({'response': 'OK'}, status=status.HTTP_200_OK)
 
 
@@ -105,6 +107,12 @@ def post_details(request):
     downvotes = models.Downvote.objects.filter(post_id=post.id).count()
     user_upvoted = models.Upvote.objects.filter(post_id=post.id,user_id=data['user_id']).exists()
     user_downvoted = models.Downvote.objects.filter(post_id=post.id,user_id=data['user_id']).exists()
+    logger.warning(os.getcwd())
+    if post.image: 
+        with open(os.getcwd()+post.image.url, "rb") as image_file:
+            encoded_image = base64.b64encode(image_file.read())
+    else:
+        encoded_image = None
     response = json.dumps({
         'id': post.id,
         'mushroom_id': post.mushroom_id,
@@ -116,8 +124,9 @@ def post_details(request):
         'user_id': post.user_id,
         'user_upvoted': user_upvoted,
         'user_downvoted': user_downvoted,
-        # 'image': post.image,
+        'image': str(encoded_image),
     })
+    logger.warning(f'IMAGE:  {post.image}')
     return Response(response, status=status.HTTP_200_OK)
 
 

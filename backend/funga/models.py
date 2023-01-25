@@ -38,7 +38,7 @@ class Post(models.Model):
     quantity = models.SmallIntegerField()
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(upload_to='db/post/img/')
 
 
 class Vote(models.Model):
