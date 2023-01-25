@@ -4,6 +4,7 @@ import {
   GetPostDetailsRequest,
   GetPostDetailsResponse,
 } from '../../api/contracts/post/get-post-details';
+import {PostDetailsDTO} from '../../api/models/post-details-dto.model';
 import {PostDetails} from '../../shared/models/post-details.model';
 
 import {
@@ -21,13 +22,19 @@ export function* fetchPostDetailsSaga(action: any): any {
         postId: payloadData.postId,
       },
     );
-
+    const postDetailsDto: PostDetailsDTO = JSON.parse(messageResponse.data);
     const postDetails: PostDetails = {
-      ...messageResponse.data,
-      mushroomId: messageResponse.data.mushroom_id,
-      userId: messageResponse.data.user_id,
-      userUpvoted: messageResponse.data.user_upvoted,
-      userDownvoted: messageResponse.data.user_downvoted,
+      mushroomId: postDetailsDto.mushroom_id,
+      userId: postDetailsDto.user_id,
+      userUpvoted: postDetailsDto.user_upvoted,
+      userDownvoted: postDetailsDto.user_downvoted,
+      id: postDetailsDto.id,
+      quantity: postDetailsDto.quantity,
+      latitude: postDetailsDto.latitude,
+      longitude: postDetailsDto.longitude,
+      upvotes: postDetailsDto.upvotes,
+      downvotes: postDetailsDto.downvotes,
+      image: postDetailsDto.image,
     };
 
     yield put({type: setCurrentPostDetails.type, payload: postDetails});

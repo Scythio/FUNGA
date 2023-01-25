@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 
 const cardStyles = StyleSheet.create({
   card: {
-    height: 150,
+    height: 200,
     flexDirection: 'row',
     shadowColor: '#999',
     shadowOffset: {width: 0, height: 1},
@@ -12,7 +12,7 @@ const cardStyles = StyleSheet.create({
     width: '95%',
   },
   cardImgWrapper: {
-    flex: 1,
+    flex: 3,
   },
   cardImg: {
     height: '100%',

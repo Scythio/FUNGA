@@ -16,7 +16,7 @@ const CardMushroomDetails: FC<CardMushroomDetailsProps> = ({postDetails}) => {
   const mushroomSpecies = useAppSelector(selectMushroomSpecies);
 
   const [details, setDetails] = useState<PostDetails | null>(postDetails);
-
+  console.log(postDetails?.image);
   useEffect(() => {
     setDetails(postDetails);
   }, [postDetails]);
@@ -68,9 +68,9 @@ const CardMushroomDetails: FC<CardMushroomDetailsProps> = ({postDetails}) => {
           <View style={cardStyles.cardImgWrapper}>
             <Image
               source={{
-                uri: details.image,
+                uri: `data:image/png;base64,${details.image.substring(1)}`,
               }}
-              resizeMode="cover"
+              resizeMode="contain"
               style={cardStyles.cardImg}
             />
           </View>

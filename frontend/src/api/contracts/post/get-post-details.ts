@@ -7,7 +7,7 @@ export interface GetPostDetailsRequest {
   userId: number;
 }
 
-export type ModelResponse = PostDetailsDTO;
+export type ModelResponse = string;
 
 export type GetPostDetailsResponse = AxiosResponse<ModelResponse>;
 
