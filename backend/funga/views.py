@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core import serializers
+from django.core.files.base import ContentFile
 
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -11,10 +12,12 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+import base64
 import logging
 import json
-import funga.models as models
+from datetime import datetime
 
+import funga.models as models
 from funga.serializer import MyTokenObtainPairSerializer, RegisterSerializer
 
 logger = logging.getLogger(__name__)
@@ -105,15 +108,13 @@ def post(request):
 
     elif request.method == 'POST':
         logger.warning(f'POST data:  {request}')
-        logger.warning(f'POST data:  {request.body}')
-        logger.warning(f'POST data:  {data}')
         models.Post.objects.create(
             mushroom_id = data["mushroom_id"],
             quantity = data['quantity'],
             latitude = data['latitude'],
             longitude= data['longitude'],
             user_id = data['user_id'],
-            # image = data['image'], # ?
+            image = ContentFile(base64.b64decode(data['image'])),
         )
         return Response({'response': 'OK'}, status=status.HTTP_200_OK)
 
