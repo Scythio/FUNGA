@@ -5,6 +5,7 @@ import postPostResponse from './contracts/postPost';
 import getMushroomList from './contracts/mushroom/get-mushroom-species';
 import getPostList from './contracts/getPostList';
 import addPost from './contracts/post/add-post';
+import login from './contracts/user/log-in';
 
 const api: Axios = axios.create({
   baseURL: 'http://172.17.16.1:8000/funga/',
@@ -27,6 +28,9 @@ const API = {
   post: {
     getPostList,
     addPost,
+  },
+  user: {
+    login,
   },
 };
 

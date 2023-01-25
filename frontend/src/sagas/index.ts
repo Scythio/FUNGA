@@ -12,6 +12,7 @@ import {
 import {watchMushroomSpecies} from './mushroom/fetch-mushroom-species.sagas';
 import {watchAddPost} from './post/add-post.saga';
 import {watchFetchPostList} from './post/fetch-post-list.sagas';
+import {watchLogin} from './user/login.sagas';
 
 export function* fetchMessageResponseSaga(): any {
   try {
@@ -80,5 +81,6 @@ export default function* rootSaga() {
     watchMushroomSpecies(),
     watchFetchPostList(),
     watchAddPost(),
+    watchLogin(),
   ]);
 }

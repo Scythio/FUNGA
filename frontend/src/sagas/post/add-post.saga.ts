@@ -16,6 +16,7 @@ export function* addPostSaga(action: any): any {
       latitude: payloadData.latitude,
       longitude: payloadData.longitude,
       userId: payloadData.userId,
+      photoBase64: payloadData.photoBase64,
     });
     yield put({type: fetchPosts.type});
   } catch (e) {}

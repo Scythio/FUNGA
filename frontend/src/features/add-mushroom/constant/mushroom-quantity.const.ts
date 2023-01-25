@@ -1,0 +1,1 @@
+export const MUSHROOOM_QUANTITY_LIST = [0, 10, 50, 100, 200];

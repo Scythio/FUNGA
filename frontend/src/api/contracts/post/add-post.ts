@@ -7,6 +7,7 @@ export interface AddPostRequest {
   latitude: number;
   longitude: number;
   userId: number;
+  photoBase64: string;
 }
 
 export type ModelResponse = {
@@ -20,6 +21,7 @@ const addPost = (payload: AddPostRequest): Promise<AddPostResponse> => {
     ...payload,
     mushroom_id: payload.mushroomId,
     user_id: payload.userId,
+    image: payload.photoBase64,
   });
   return response;
 };

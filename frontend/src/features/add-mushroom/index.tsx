@@ -3,41 +3,41 @@ import {StyleSheet, View, Dimensions, Image} from 'react-native';
 import {styles} from './styles';
 import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown';
 import useCamera from '../../shared/hooks/camera';
-import {MushroomSpecies} from '../../shared/models/mushroom-species.model';
-import LikeDislike, {
-  LikeDislikeProps,
-} from '../../shared/components/like-dislike';
-import {LikeDislikeState} from '../../shared/constants/like-dislike-state.enum';
 import {Button, Text} from 'react-native-paper';
 import Slider from '@react-native-community/slider';
 import {useAppDispatch, useAppSelector} from '../../store';
 import {
-  fetchBerries,
-  selectBerries,
-} from '../../store/slices/pokemon/pokemon.slice';
-import { addPost } from '../../store/slices/mushroom/mushroom.slice';
-import { forceTouchGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/ForceTouchGestureHandler';
-
-let dataSet: Array<MushroomSpecies> = [
-  {id: 1, name: 'Borowik'},
-  {id: 2, name: 'Beta'},
-  {id: 3, name: 'Gamma'},
-];
+  fetchMushroomSpecies,
+  selectMushroomSpecies,
+  selectMushroomSpeciesStatus,
+} from '../../store/slices/mushroom/mushroom.slice';
+import {FetchingStatus} from '../../shared/constants/fetching-status.enum';
+import {MUSHROOOM_QUANTITY_LIST} from './constant/mushroom-quantity.const';
+import useGeolocation from '../../shared/hooks/geolocation';
+import {selectCurrentUser} from '../../store/slices/user/user.slice';
+import {addPost} from '../../store/slices/post/post.slice';
 
 interface AddMushroomScreenProps {}
+
 const AddMushroomScreen: FC<AddMushroomScreenProps> = () => {
   const dispatch = useAppDispatch();
-  const berries = useAppSelector(selectBerries);
-  const [selectedItem, setSelectedItem] = useState<MushroomSpecies | null>(
-    dataSet[0],
-  );
+  const mushroomSpecies = useAppSelector(selectMushroomSpecies);
+  const mushroomSpeciesStatus = useAppSelector(selectMushroomSpeciesStatus);
+  const currentUser = useAppSelector(selectCurrentUser);
+  const [selectedMushroomSpecies, setSelectedMushroomSpecies] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
   const [numberOfMushrooms, setNumberOfMushrooms] = useState<number>(0);
 
   const {startCamera, photo, removePhoto} = useCamera();
 
+  const {currentPosition} = useGeolocation();
+
   useEffect(() => {
-    console.log(berries);
-  }, [berries]);
+    mushroomSpeciesStatus == FetchingStatus.UNSET &&
+      dispatch(fetchMushroomSpecies());
+  }, [mushroomSpeciesStatus]);
 
   return (
     <View style={styles.container}>
@@ -54,16 +54,20 @@ const AddMushroomScreen: FC<AddMushroomScreenProps> = () => {
             clearOnFocus={false}
             closeOnBlur={true}
             closeOnSubmit={false}
-            initialValue={selectedItem ? `${selectedItem.id}` : undefined}
+            initialValue={
+              selectedMushroomSpecies
+                ? `${selectedMushroomSpecies.id}`
+                : undefined
+            }
             onSelectItem={item => {
               item
-                ? setSelectedItem({
-                    id: parseInt(item.id),
-                    name: item.title!,
+                ? setSelectedMushroomSpecies({
+                    id: item.id,
+                    title: item.title || '',
                   })
-                : setSelectedItem(null);
+                : setSelectedMushroomSpecies(null);
             }}
-            dataSet={dataSet.map(value => ({
+            dataSet={mushroomSpecies.map(value => ({
               id: `${value.id}`,
               title: value.name,
             }))}
@@ -74,11 +78,12 @@ const AddMushroomScreen: FC<AddMushroomScreenProps> = () => {
           <Slider
             value={numberOfMushrooms}
             onValueChange={setNumberOfMushrooms}
-            maximumValue={100}
+            maximumValue={4}
             minimumValue={0}
-            step={10}
+            step={1}
           />
         </View>
+        <Text>{MUSHROOOM_QUANTITY_LIST[numberOfMushrooms]}</Text>
         <View style={{padding: 10, marginTop: 20}}>
           <Text style={styles.subHeader}>Załącz zdjęcie</Text>
           {!photo?.uri ? (
@@ -127,23 +132,33 @@ const AddMushroomScreen: FC<AddMushroomScreenProps> = () => {
         <Button
           mode="contained"
           onPress={() => {
-            dispatch(addPost({
-              mushroomPk: 5,
-              quantity: 10,
-              latitude: 54,
-              longitude: 21,
-              userPk: 2,
-              image: {
-                name: photo?.fileName!,
-                type: photo?.type!,
-                uri: photo?.uri!,
-            }
-            }));
+            selectedMushroomSpecies &&
+              numberOfMushrooms > 0 &&
+              currentUser &&
+              !!photo &&
+              photo.base64 &&
+              dispatch(
+                addPost({
+                  mushroomId: parseInt(selectedMushroomSpecies.id),
+                  quantity: MUSHROOOM_QUANTITY_LIST[numberOfMushrooms],
+                  latitude: currentPosition ? currentPosition.latitude : 52.21,
+                  longitude: currentPosition
+                    ? currentPosition.longitude
+                    : 20.86,
+                  userId: currentUser.id,
+                  photoBase64: photo.base64,
+                }),
+              );
           }}>
           Dodaj
         </Button>
-        <Button mode="contained" onPress={() => {}}>
-          Usun
+        <Button
+          mode="contained"
+          onPress={() => {
+            !!photo && removePhoto();
+            setNumberOfMushrooms(0);
+          }}>
+          Anuluj
         </Button>
       </View>
     </View>
