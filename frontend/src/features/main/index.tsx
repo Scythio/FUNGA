@@ -25,10 +25,15 @@ import {FAB} from 'react-native-paper';
 import useGeolocation from '../../shared/hooks/geolocation';
 import {FetchingStatus} from '../../shared/constants/fetching-status.enum';
 import {
+  clearPostDetails,
+  fetchPostDetails,
   fetchPosts,
+  selectCurrentPostDetails,
+  selectPostDetailsStatus,
   selectPostList,
   selectPostListStatus,
 } from '../../store/slices/post/post.slice';
+import {selectCurrentUser} from '../../store/slices/user/user.slice';
 
 const {width, height} = Dimensions.get('window');
 
@@ -47,6 +52,9 @@ const MainScreen: FC<MainScreenProps> = ({navigation}) => {
   const mushroomSpeciesStatus = useAppSelector(selectMushroomSpeciesStatus);
   const postList = useAppSelector(selectPostList);
   const postListStatus = useAppSelector(selectPostListStatus);
+  const currentUser = useAppSelector(selectCurrentUser);
+  const currentPostDetails = useAppSelector(selectCurrentPostDetails);
+  const postDetailsStatus = useAppSelector(selectPostDetailsStatus);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -58,9 +66,8 @@ const MainScreen: FC<MainScreenProps> = ({navigation}) => {
     postListStatus == FetchingStatus.UNSET && dispatch(fetchPosts());
   }, [postListStatus]);
 
-  const [activeMushroom, setActiveMushroom] = useState<MushroomRecord | null>(
-    null,
-  );
+  const [isActivePost, setIsActivePost] = useState<boolean>(false);
+
   const [currentRegion, setCurrentRegion] = useState<Region>({
     latitude: LATITUDE,
     longitude: LONGITUDE,
@@ -77,7 +84,8 @@ const MainScreen: FC<MainScreenProps> = ({navigation}) => {
         initialRegion={currentRegion}
         customMapStyle={customStyle}
         onPress={() => {
-          setActiveMushroom(null);
+          setIsActivePost(false);
+          dispatch(clearPostDetails());
         }}
         showsUserLocation>
         {postList.map(post => (
@@ -87,7 +95,17 @@ const MainScreen: FC<MainScreenProps> = ({navigation}) => {
               latitude: post.latitude,
             }}
             key={post.id}
-            onPress={event => {}}
+            onPress={event => {
+              if (currentUser) {
+                dispatch(
+                  fetchPostDetails({
+                    postId: post.id,
+                    userId: currentUser.id,
+                  }),
+                );
+                setIsActivePost(true);
+              }
+            }}
           />
         ))}
         {postList.length > 0 && (
@@ -117,7 +135,7 @@ const MainScreen: FC<MainScreenProps> = ({navigation}) => {
           }))}
         />
       </View>
-      {!activeMushroom ? (
+      {!isActivePost ? (
         <View style={styles.button}>
           <FAB
             visible={true}
@@ -129,7 +147,7 @@ const MainScreen: FC<MainScreenProps> = ({navigation}) => {
         </View>
       ) : (
         <View style={styles.cardMushroomDetails}>
-          <CardMushroomDetails mushroom={activeMushroom} />
+          <CardMushroomDetails postDetails={currentPostDetails} />
         </View>
       )}
     </View>

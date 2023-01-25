@@ -33,11 +33,7 @@ const LikeDislike: FC<LikeDislikeProps> = ({
           }}
           icon="like2"
         />
-        <Text>
-          {likeDislikestate == LikeDislikeState.LIKE
-            ? likeCount + 1
-            : likeCount}
-        </Text>
+        <Text>{likeCount}</Text>
       </View>
       <View style={styles.buttonContainer}>
         <IconButton
@@ -53,11 +49,7 @@ const LikeDislike: FC<LikeDislikeProps> = ({
           }}
           icon="dislike2"
         />
-        <Text>
-          {likeDislikestate == LikeDislikeState.DISLIKE
-            ? dislikeCount + 1
-            : dislikeCount}
-        </Text>
+        <Text>{dislikeCount}</Text>
       </View>
     </View>
   );

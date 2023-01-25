@@ -6,9 +6,10 @@ import getMushroomList from './contracts/mushroom/get-mushroom-species';
 import getPostList from './contracts/getPostList';
 import addPost from './contracts/post/add-post';
 import login from './contracts/user/log-in';
+import getPostDetails from './contracts/post/get-post-details';
 
 const api: Axios = axios.create({
-  baseURL: 'http://172.17.16.1:8000/funga/',
+  baseURL: 'http://172.21.144.1:8000/funga/',
   withCredentials: true,
 });
 
@@ -28,6 +29,7 @@ const API = {
   post: {
     getPostList,
     addPost,
+    getPostDetails,
   },
   user: {
     login,
