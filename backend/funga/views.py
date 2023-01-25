@@ -118,6 +118,30 @@ def post(request):
         return Response({'response': 'OK'}, status=status.HTTP_200_OK)
 
 
+@api_view(['POST'])
+def register(request):
+    data = json.loads(request.body.decode("utf-8"))
+    if models.DummyUser.objects.filter(username=data['username']).exists():
+        return Response({'response': 'FAIL', 'message': 'username already exists'}, status=status.HTTP_200_OK)
+    if models.DummyUser.objects.filter(email=data['email']).exists():
+        return Response({'response': 'FAIL', 'message': 'email already exists'}, status=status.HTTP_200_OK)
+    new_user = models.DummyUser.objects.create(
+        username = data['username'],
+        email = data['email'],
+        password = data['password']
+    )
+    return Response({'response': 'OK', 'message': 'user created'}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def log_in(request):
+    data = json.loads(request.body.decode("utf-8"))
+    if models.DummyUser.objects.filter(username=data['username'], password=data['password']).exists():
+        user = models.DummyUser.objects.filter(username=data['username'], password=data['password']).first()
+        return Response({'response': 'OK', 'user_id': user.id}, status=status.HTTP_200_OK)
+    return Response({'response': 'FAIL', 'user_id': -1}, status=status.HTTP_200_OK)
+
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 

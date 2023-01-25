@@ -18,13 +18,20 @@ class Mushroom(models.Model):
     description = models.CharField(max_length=640, null=True, blank=True)
 
 
+class DummyUser(models.Model):  #FIXME FOR DEVELOPEMENT ONLY!
+    username = models.CharField(max_length=50, unique=True)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=50)
+
+
 class Post(models.Model):
     mushroom = models.ForeignKey(
         Mushroom,
         on_delete=models.CASCADE,
     )
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        DummyUser,  #FIXME FOR DEVELOPEMENT ONLY!
+        # settings.AUTH_USER_MODEL,  # FIXME
         on_delete=models.CASCADE,
     )
     datetime = models.DateTimeField(auto_now_add=True)
@@ -36,7 +43,8 @@ class Post(models.Model):
 
 class Vote(models.Model):
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        DummyUser,  #FIXME FOR DEVELOPEMENT ONLY!
+        # settings.AUTH_USER_MODEL,  # FIXME
         on_delete=models.CASCADE,
     )
     post = models.ForeignKey(
