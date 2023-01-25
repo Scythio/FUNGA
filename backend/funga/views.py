@@ -29,6 +29,7 @@ def mushroom_list(request):
     data = serializers.serialize('json', models.Mushroom.objects.all())
     return Response(data, status=status.HTTP_200_OK)
 
+
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 def post_list(request):
@@ -62,6 +63,7 @@ def upvote(request):
         models.Upvote.objects.get_or_create(post_id=data['post_id'],user_id=data['user_id'])
         return Response({'response': 'OK', 'action': 'add'}, status=status.HTTP_200_OK)
 
+
 @api_view(['POST'])
 # @permission_classes([IsAuthenticated])
 def downvote(request):
@@ -78,45 +80,45 @@ def downvote(request):
         models.Downvote.objects.get_or_create(post_id=data['post_id'],user_id=data['user_id'])
         return Response({'response': 'OK', 'action': 'add'}, status=status.HTTP_200_OK)
 
-@api_view(['GET', 'POST'])
+
+@api_view(['POST'])
 # @permission_classes([IsAuthenticated])
 def post(request):
     data = json.loads(request.body.decode("utf-8"))
-    if request.method == 'GET':
-        logger.warning(f'POST data:  {request.body}')
-        logger.warning(f'POST data:  {data}')
+    models.Post.objects.create(
+        mushroom_id = data["mushroom_id"],
+        quantity = data['quantity'],
+        latitude = data['latitude'],
+        longitude= data['longitude'],
+        user_id = data['user_id'],
+        image = ContentFile(base64.b64decode(data['image'])),
+    )
+    return Response({'response': 'OK'}, status=status.HTTP_200_OK)
 
-        post = models.Post.objects.get(id=data['post_id'])
-        upvotes = models.Upvote.objects.filter(post_id=post.id).count()
-        downvotes = models.Downvote.objects.filter(post_id=post.id).count()
-        user_upvoted = models.Upvote.objects.filter(post_id=post.id,user_id=data['user_id']).exists()
-        user_downvoted = models.Downvote.objects.filter(post_id=post.id,user_id=data['user_id']).exists()
-        response = json.dumps({
-            'id': post.id,
-            'mushroom_id': post.mushroom_id,
-            'quantity': post.quantity,
-            'latitude': float(post.latitude),
-            'longitude': float(post.longitude),
-            'upvotes': upvotes,
-            'downvotes': downvotes,
-            'user_id': post.user_id,
-            'user_upvoted': user_upvoted,
-            'user_downvoted': user_downvoted,
-            # 'image': post.image,
-        })
-        return Response(response, status=status.HTTP_200_OK)
 
-    elif request.method == 'POST':
-        logger.warning(f'POST data:  {request}')
-        models.Post.objects.create(
-            mushroom_id = data["mushroom_id"],
-            quantity = data['quantity'],
-            latitude = data['latitude'],
-            longitude= data['longitude'],
-            user_id = data['user_id'],
-            image = ContentFile(base64.b64decode(data['image'])),
-        )
-        return Response({'response': 'OK'}, status=status.HTTP_200_OK)
+@api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+def post_details(request):
+    data = json.loads(request.body.decode("utf-8"))
+    post = models.Post.objects.get(id=data['post_id'])
+    upvotes = models.Upvote.objects.filter(post_id=post.id).count()
+    downvotes = models.Downvote.objects.filter(post_id=post.id).count()
+    user_upvoted = models.Upvote.objects.filter(post_id=post.id,user_id=data['user_id']).exists()
+    user_downvoted = models.Downvote.objects.filter(post_id=post.id,user_id=data['user_id']).exists()
+    response = json.dumps({
+        'id': post.id,
+        'mushroom_id': post.mushroom_id,
+        'quantity': post.quantity,
+        'latitude': float(post.latitude),
+        'longitude': float(post.longitude),
+        'upvotes': upvotes,
+        'downvotes': downvotes,
+        'user_id': post.user_id,
+        'user_upvoted': user_upvoted,
+        'user_downvoted': user_downvoted,
+        # 'image': post.image,
+    })
+    return Response(response, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])

@@ -7,6 +7,7 @@ urlpatterns = [
     path('mushroom-list', views.mushroom_list, name='mushroom.list'),
     path('post-list', views.post_list, name='post.list'),
     path('post', views.post, name='post'),
+    path('post-details', views.post_details, name='post_details'),
     path('upvote', views.upvote, name='upvote'),
     path('downvote', views.downvote, name='downvote'),
     path('register', views.register, name='register'),
