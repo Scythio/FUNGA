@@ -57,3 +57,15 @@ def populate_mushroom():
         edible = False,
         edibility = models.Mushroom.INEDIBLE,
     )
+
+
+def populate_post():
+    models.Post.objects.get_or_create(pk=1,mushroom_id=7,quantity=50,latitude=52.3322,longitude=20.7087,user_id=1,image='/db/post/img/f1.png')
+    models.Post.objects.get_or_create(pk=2,mushroom_id=1,quantity=10,latitude=52.11,longitude=20.66,user_id=2,image='/db/post/img/f2.png')
+    models.Post.objects.get_or_create(pk=3,mushroom_id=5,quantity=50,latitude=53.5,longitude=21.11,user_id=3,image='/db/post/img/f3.png')
+    models.Post.objects.get_or_create(pk=4,mushroom_id=2,quantity=100,latitude=53.1,longitude=21.2,user_id=3,image='/db/post/img/f4.png')
+    models.Post.objects.get_or_create(pk=5,mushroom_id=2,quantity=50,latitude=51.22,longitude=20.9,user_id=4,image='/db/post/img/f5.png')
+    models.Post.objects.get_or_create(pk=6,mushroom_id=6,quantity=200,latitude=54.0022,longitude=20.5,user_id=1,image='/db/post/img/f6.png')
+    models.Post.objects.get_or_create(pk=7,mushroom_id=6,quantity=50,latitude=52.22,longitude=22.2,user_id=4,image='/db/post/img/f7.png')
+    models.Post.objects.get_or_create(pk=8,mushroom_id=6,quantity=200,latitude=53.0022,longitude=18.6,user_id=1,image='/db/post/img/f8.png')
+

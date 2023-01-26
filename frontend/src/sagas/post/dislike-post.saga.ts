@@ -2,7 +2,7 @@ import {takeEvery, call} from 'redux-saga/effects';
 import API from '../../api';
 import {DislikePostRequest} from '../../api/contracts/post/dislike-post';
 
-import {likePost} from '../../store/slices/post/post.slice';
+import {dislikePost, likePost} from '../../store/slices/post/post.slice';
 
 export function* dislikePostSaga(action: any): any {
   try {
@@ -16,5 +16,5 @@ export function* dislikePostSaga(action: any): any {
 }
 
 export function* watchDislikePost() {
-  yield takeEvery(likePost.type, dislikePostSaga);
+  yield takeEvery(dislikePost.type, dislikePostSaga);
 }

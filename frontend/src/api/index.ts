@@ -11,7 +11,7 @@ import likePost from './contracts/post/like-post';
 import dislikePost from './contracts/post/dislike-post';
 
 const api: Axios = axios.create({
-  baseURL: 'http://172.21.144.1:8000/funga/',
+  baseURL: 'http://172.24.0.1:8000/funga/',
   withCredentials: true,
 });
 

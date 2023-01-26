@@ -53,9 +53,8 @@ def post_list(request):
 @api_view(['POST'])
 # @permission_classes([IsAuthenticated])
 def upvote(request):
-    logger.warning(f'POST data:  {request.body}')
     data = json.loads(request.body.decode("utf-8"))
-    logger.warning(f'POST data:  {data}')
+    logger.warning(f'UP data:  {data}')
     if data['action'] == 'remove':
         models.Upvote.objects.filter(post_id=data['post_id'],user_id=data['user_id']).delete()
         return Response({'response': 'OK', 'action': 'remove'}, status=status.HTTP_200_OK)
@@ -68,9 +67,8 @@ def upvote(request):
 @api_view(['POST'])
 # @permission_classes([IsAuthenticated])
 def downvote(request):
-    logger.warning(f'POST data:  {request.body}')
     data = json.loads(request.body.decode("utf-8"))
-    logger.warning(f'POST data:  {data}')
+    logger.warning(f'DOWN data:  {data}')
     if data['action'] == 'remove':
         logger.warning(f'kkkk')
         models.Downvote.objects.filter(post_id=data['post_id'],user_id=data['user_id']).delete()

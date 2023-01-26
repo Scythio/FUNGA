@@ -60,6 +60,10 @@ const MainScreen: FC<MainScreenProps> = ({navigation}) => {
   const postDetailsStatus = useAppSelector(selectPostDetailsStatus);
   const dispatch = useAppDispatch();
 
+  console.log('Up & Down')
+  console.log(currentPostDetails?.upvotes)
+  console.log(currentPostDetails?.downvotes)
+
   useEffect(() => {
     mushroomSpeciesStatus == FetchingStatus.UNSET &&
       dispatch(fetchMushroomSpecies());
@@ -136,7 +140,7 @@ const MainScreen: FC<MainScreenProps> = ({navigation}) => {
                 longitude: post.longitude,
                 weight: post.quantity,
               }))}
-            radius={100}
+            radius={50}
           />
         )}
       </MapView>
